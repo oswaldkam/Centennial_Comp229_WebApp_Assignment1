@@ -20,6 +20,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '16.x'
+      
+      - name: Change folder
+        run : |
+          ls
+          cd Portfilio
 
       - name: npm install, build, and test
         run: |
