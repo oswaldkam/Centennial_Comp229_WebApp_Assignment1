@@ -6,3 +6,15 @@ body {
 a {
   color: #00B7FF;
 }
+
+nav{
+  height: 3rem;
+  margin-bottom: 1rem;
+}
+
+.project{
+  margin-top: 2rem;
+    margin-bottom: 2rem;
+    border: 0;
+    border-top: 0.15rem solid rgba(0, 0, 0, 0.1);
+}
