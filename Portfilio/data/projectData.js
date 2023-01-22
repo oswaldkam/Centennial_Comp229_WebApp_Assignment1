@@ -1,4 +1,12 @@
+/*
+File name: projectData.js
+Student’s Name: Wing Cheung Kam
+StudentID: 301279106
+Date: 2023-JAN-22
+*/
+
 module.exports = {
+  // List all project and the detail including title, role, description. Screenshot image will be in path field
   projectData: [
     {
       title: "Blind Dog Agent",
