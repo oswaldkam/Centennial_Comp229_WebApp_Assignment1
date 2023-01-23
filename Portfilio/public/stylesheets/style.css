@@ -1,8 +1,8 @@
 /*
-File name: style.css
-Student’s Name: Wing Cheung Kam
-StudentID: 301279106
-Date: 2023-JAN-22
+  File name: style.css
+  Student’s Name: Wing Cheung Kam
+  StudentID: 301279106
+  Date: 2023-JAN-22
 */
 
 body {
@@ -14,14 +14,10 @@ a {
   color: #00B7FF;
 }
 
+/*
+  Style of navigation bar
+*/
 nav{
   height: 3rem;
   margin-bottom: 1rem;
-}
-
-.project{
-  margin-top: 2rem;
-    margin-bottom: 2rem;
-    border: 0;
-    border-top: 0.15rem solid rgba(0, 0, 0, 0.1);
 }
