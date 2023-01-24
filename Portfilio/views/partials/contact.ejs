@@ -1,14 +1,14 @@
 <script>
-  $(document).on("submit", "form.contactForm", do_ajax_call);
+  $(document).on("submit", "form.contactForm", submitCallback);
 
-  function do_ajax_call(e) {
+  function submitCallback(e) {
+    e.preventDefault();
     alert(
       "Hi " +
         e.target.lastName.value +
         ", we got your message, thanks for contacting!"
     );
-    window.location.href = window.location.origin;
-    e.preventDefault();
+    return false;
   }
 </script>
 <div>
@@ -17,7 +17,7 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <form class="contactForm" onsubmit="submit()">
+      <form class="contactForm" onsubmit="submit()" action="/">
         <div class="form-group">
           <div class="form-row">
             <div class="col">
