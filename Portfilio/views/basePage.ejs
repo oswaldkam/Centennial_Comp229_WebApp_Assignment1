@@ -27,11 +27,11 @@
   </head>
   <body>
     <header><%- include('partials/header.ejs',{active: page}) %></header>
-    <article>
+    <main>
       <div class="container-fluid"">
         <%- include('partials/'+page+'.ejs',{active: page, data: data}) %>
       </div>
-    </article>
+    </main>
     <footer class="bg-info text-center text-lg-start fixed-bottom"> 
         <%- include('partials/footer.ejs') %>
     </footer>
