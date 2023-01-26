@@ -27,5 +27,10 @@ router.get("/projects", function (req, res, next) {
 router.get("/contact", function (req, res, next) {
   res.render("basePage", { title: "Contact", page: "contact", data: null });
 });
-
+router.get("/404", function (req, res, next) {
+  res.render("basePage", { title: "Page not found", page: "404", data: null });
+});
+router.get("/500", function (req, res, next) {
+  res.render("basePage", { title: "Error", page: "500", data: null });
+});
 module.exports = router;

@@ -22,7 +22,8 @@ app.use("/", router);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  next(createError(404));
+  res.status(404);
+  res.render("basePage", { title: "Page not found", page: "404", data: null });
 });
 
 // error handler
@@ -33,7 +34,7 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render("error");
+  res.render("basePage", { title: "Error", page: "500", data: null });
 });
 
 module.exports = app;
