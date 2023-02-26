@@ -11,6 +11,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 
 var DB = require("./db");
 var user = require("./models/user");
+var contact = require("./models/contact");
 
 var router = require("./routes/index");
 
@@ -29,17 +30,17 @@ app.use(passport.initialize());
 app.use("/", router);
 
 // login filter
-app.use(function (req, res, next) {
-  var msgs = req.session.messages || [];
-  res.locals.messages = msgs;
-  res.locals.hasMessages = !!msgs.length;
-  req.session.messages = [];
-  next();
-});
-app.use(function (req, res, next) {
-  res.locals.csrfToken = req.csrfToken();
-  next();
-});
+// app.use(function (req, res, next) {
+//   var msgs = req.session.messages || [];
+//   res.locals.messages = msgs;
+//   res.locals.hasMessages = !!msgs.length;
+//   req.session.messages = [];
+//   next();
+// });
+// app.use(function (req, res, next) {
+//   res.locals.csrfToken = req.csrfToken();
+//   next();
+// });
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -48,15 +49,15 @@ app.use(function (req, res, next) {
 });
 
 // error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
+// app.use(function (err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render("basePage", { title: "Error", page: "500", data: null });
-});
+//   // render the error page
+//   res.status(err.status || 500);
+//   res.render("basePage", { title: "Error", page: "500", data: null });
+// });
 
 // DB setup
 mongoose.connect(DB.URI, { useNewUrlParser: true, useUnifiedtopology: true });
@@ -67,16 +68,21 @@ mongoDB.once("open", () => {
 });
 
 // Initial db ensure there is a user
-user.deleteMany({});
-var result = user.create({
-  username: "user",
-  password: "password",
-  email: "hello@world.com",
-  firstName: "Peter",
-  lastName: "Griffin",
-  tel: "555-555-1234",
-});
-console.log(result);
+// user.deleteMany({});
+// var result = user.create({
+//   username: "user",
+//   password: "password",
+//   email: "hello@world.com",
+//   firstName: "Peter",
+//   lastName: "Griffin",
+//   tel: "555-555-1234",
+// });
+// contact.create({
+//   firstName: "foo",
+//   lastName: "bar",
+//   phone: "5555551234",
+//   email: "foo@bar.com",
+// });
 
 // Passport JS username and password
 passport.use(

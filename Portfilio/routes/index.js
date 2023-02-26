@@ -3,6 +3,7 @@ var servicesData = require("../data/servicesData");
 var express = require("express");
 var router = express.Router();
 var passport = require("passport");
+const contact = require("../models/contact");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -41,9 +42,64 @@ router.get("/login", function (req, res, next) {
   res.render("basePage", { title: "Login", page: "login", data: null });
 });
 
+router.get("/contactList", async function (req, res, next) {
+  const contacts = await contact.find();
+  res.render("basePage", {
+    title: "Contact List",
+    page: "contactList/list",
+    data: { contacts: contacts },
+  });
+});
+router.get("/contactList/edit/:id", async function (req, res, next) {
+  const result = await contact.findById(req.params.id);
+  res.render("basePage", {
+    title: "Contact edit",
+    page: "contactList/edit",
+    data: { contacts: result },
+  });
+});
+
+// API
+// Contact list operation
+router.post("/contactList/:id", function (req, res, next) {
+  const { firstName, lastName, phone, email } = req.body;
+  console.log("fffgff", firstName, lastName, phone, email);
+  contact.findByIdAndUpdate(
+    req.params.id,
+    {
+      firstName: firstName,
+      lastName: lastName,
+      phone: phone,
+      email: email,
+    },
+    function (err, docs) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Updated User : ", docs);
+      }
+    }
+  );
+  res.redirect("/contactList");
+});
+router.delete("/contactList/:id", function (req, res, next) {
+  contact.findByIdAndRemove(
+    req.params.id,
+    { name, phone, email },
+    function (err, docs) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Updated User : ", docs);
+      }
+    }
+  );
+});
+
+// Login
 router.post(
   "/login",
-  passport.authenticate("local", { failureRedirect: "/" }),
+  passport.authenticate("local", { failureRedirect: "/login" }),
   function (req, res) {
     console.log(req.user);
     res.redirect("/contact");
