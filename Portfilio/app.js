@@ -7,6 +7,7 @@ var passport = require("passport");
 var mongoose = require("mongoose");
 const session = require("express-session");
 var LocalStrategy = require("passport-local");
+const passportLocalMongoose = require("passport-local-mongoose");
 
 var DB = require("./db");
 var user = require("./models/user");
@@ -95,8 +96,5 @@ passport.use(
     );
   })
 );
-
-passport.serializeUser(user.serializeUser());
-passport.deserializeUser(user.deserializeUser());
 
 module.exports = app;
