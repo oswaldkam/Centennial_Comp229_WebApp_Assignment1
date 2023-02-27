@@ -4,6 +4,7 @@ var express = require("express");
 var router = express.Router();
 var passport = require("passport");
 const contact = require("../models/contact");
+const userModel = require("../models/user");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -103,20 +104,35 @@ router.delete(
 );
 
 // Login
-router.post(
-  "/login",
-  passport.authenticate("local", {
-    failureRedirect: "/",
-    successRedirect: "/contactList",
-  })
-);
+router.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, User, info) => {
+    //server err?
+    if (err) {
+      console.log(err);
+      return next(err);
+    }
+    //is there a user login error?
+    if (!User) {
+      req.flash("loginMessage", "Authentication Error");
+      return res.redirect("/login");
+    }
+    req.login(User, (err) => {
+      //server error?
+      if (err) {
+        return next(err);
+      }
+      return res.redirect("/contactList");
+    });
+  })(req, res, next);
+});
 // Check is logined
 function checkAuthenticated(req, res, next) {
-  console.log(req.isAuthenticated());
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect("/login");
+  // console.log(req.isAuthenticated());
+  // if (req.isAuthenticated()) {
+  //   return next();
+  // }
+  // res.redirect("/login");
+  return next();
 }
 
 module.exports = router;

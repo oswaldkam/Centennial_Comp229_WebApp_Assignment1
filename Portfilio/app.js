@@ -7,13 +7,14 @@ var passport = require("passport");
 var mongoose = require("mongoose");
 const session = require("express-session");
 var LocalStrategy = require("passport-local");
-const passportLocalMongoose = require("passport-local-mongoose");
 
 var DB = require("./db");
-var user = require("./models/user");
+var userModel = require("./models/user");
 var contact = require("./models/contact");
 
 var router = require("./routes/index");
+const user = require("./models/user");
+let flash = require("connect-flash");
 
 var app = express();
 
@@ -34,6 +35,7 @@ app.use(
     cookie: { secure: true },
   })
 );
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/", router);
@@ -94,40 +96,9 @@ mongoDB.once("open", () => {
 // });
 
 // Passport JS username and password
-passport.use(
-  new LocalStrategy(
-    {
-      usernameField: "username",
-      passwordField: "password",
-    },
-    async (username, password, done) => {
-      try {
-        const result = await user.findOne({
-          username: username,
-        });
-        if (!result || result.password !== password) {
-          return done(null, false, {
-            message: "Incorrect usernameor password",
-          });
-        }
-        return done(null, result);
-      } catch (error) {
-        return done(error);
-      }
-    }
-  )
-);
+passport.use(user.createStrategy());
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (error) {
-    done(error);
-  }
-});
+passport.serializeUser(user.serializeUser());
+passport.deserializeUser(user.deserializeUser());
 
 module.exports = app;
