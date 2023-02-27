@@ -86,12 +86,12 @@ mongoDB.once("open", () => {
 //   lastName: "Griffin",
 //   tel: "555-555-1234",
 // });
-contact.create({
-  firstName: "foo",
-  lastName: "bar",
-  phone: "5555551234",
-  email: "foo@bar.com",
-});
+// contact.create({
+//   firstName: "foo",
+//   lastName: "bar",
+//   phone: "5555551234",
+//   email: "foo@bar.com",
+// });
 
 // Passport JS username and password
 passport.use(
@@ -104,10 +104,11 @@ passport.use(
       try {
         const result = await user.findOne({
           username: username,
-          password: password,
         });
-        if (!result) {
-          return done(null, false, { message: "Incorrect username" });
+        if (!result || result.password !== password) {
+          return done(null, false, {
+            message: "Incorrect usernameor password",
+          });
         }
         return done(null, result);
       } catch (error) {
