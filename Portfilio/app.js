@@ -26,7 +26,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  session({
+    secret: "helloworld",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+  })
+);
 app.use(passport.initialize());
+app.use(passport.session());
 app.use("/", router);
 
 // login filter
@@ -86,21 +95,38 @@ contact.create({
 
 // Passport JS username and password
 passport.use(
-  new LocalStrategy(function verify(username, password, cb) {
-    user.findOne(
-      { username: username, password: password },
-      function (err, obj) {
-        if (err) {
-          return cb(err);
+  new LocalStrategy(
+    {
+      usernameField: "username",
+      passwordField: "password",
+    },
+    async (username, password, done) => {
+      try {
+        const result = await user.findOne({
+          username: username,
+          password: password,
+        });
+        if (!result) {
+          return done(null, false, { message: "Incorrect username" });
         }
-        if (!user) {
-          return cb(null, false, {
-            message: "Incorrect username or password.",
-          });
-        }
+        return done(null, result);
+      } catch (error) {
+        return done(error);
       }
-    );
-  })
+    }
+  )
 );
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (error) {
+    done(error);
+  }
+});
 
 module.exports = app;
