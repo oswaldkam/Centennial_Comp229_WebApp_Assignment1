@@ -83,17 +83,15 @@ router.post("/contactList/:id", function (req, res, next) {
   res.redirect("/contactList");
 });
 router.delete("/contactList/:id", function (req, res, next) {
-  contact.findByIdAndRemove(
-    req.params.id,
-    { name, phone, email },
-    function (err, docs) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("Updated User : ", docs);
-      }
+  contact.findByIdAndRemove(req.params.id, function (err, docs) {
+    if (err) {
+      console.log(err);
+      res.json({ success: false, error: JSON.stringify(err) });
+    } else {
+      console.log("Delete User : ", docs);
+      res.json({ success: true, error: "" });
     }
-  );
+  });
 });
 
 // Login

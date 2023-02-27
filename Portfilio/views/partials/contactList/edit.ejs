@@ -9,6 +9,7 @@
           class="form-control"
           id="firstName"
           name="firstName"
+          required
           value="<%= data.contacts.firstName %>"
         />
       </div>
@@ -19,6 +20,7 @@
           class="form-control"
           id="lastName"
           name="lastName"
+          required
           value="<%= data.contacts.lastName %>"
         />
       </div>
@@ -29,6 +31,8 @@
           class="form-control"
           id="phone"
           name="phone"
+          type="tel"
+          required
           value="<%= data.contacts.phone %>"
         />
       </div>
@@ -39,6 +43,8 @@
           class="form-control"
           id="email"
           name="email"
+          type="email"
+          required
           value="<%= data.contacts.email %>"
         />
       </div>
