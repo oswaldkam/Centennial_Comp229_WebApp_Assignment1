@@ -2,6 +2,9 @@ var projectData = require("../data/projectData");
 var servicesData = require("../data/servicesData");
 var express = require("express");
 var router = express.Router();
+var passport = require("passport");
+const contact = require("../models/contact");
+const userModel = require("../models/user");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -33,4 +36,111 @@ router.get("/404", function (req, res, next) {
 router.get("/500", function (req, res, next) {
   res.render("basePage", { title: "Error", page: "500", data: null });
 });
+router.get("/contact", function (req, res, next) {
+  res.render("basePage", { title: "Contact", page: "contact", data: null });
+});
+router.get("/login", function (req, res, next) {
+  res.render("basePage", { title: "Login", page: "login", data: null });
+});
+
+router.get("/contactList", checkAuthenticated, async function (req, res, next) {
+  const contacts = await contact.find().sort({ lastName: "asc" });
+  res.render("basePage", {
+    title: "Contact List",
+    page: "contactList/list",
+    data: { contacts: contacts },
+  });
+});
+router.get(
+  "/contactList/edit/:id",
+  checkAuthenticated,
+  async function (req, res, next) {
+    const result = await contact.findById(req.params.id);
+    res.render("basePage", {
+      title: "Contact edit",
+      page: "contactList/edit",
+      data: { contacts: result },
+    });
+  }
+);
+
+// API
+// Contact list operation
+router.post("/contactList/:id", checkAuthenticated, function (req, res, next) {
+  const { firstName, lastName, phone, email } = req.body;
+  console.log("fffgff", firstName, lastName, phone, email);
+  contact.findByIdAndUpdate(
+    req.params.id,
+    {
+      firstName: firstName,
+      lastName: lastName,
+      phone: phone,
+      email: email,
+    },
+    function (err, docs) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Updated User : ", docs);
+      }
+    }
+  );
+  res.redirect("/contactList");
+});
+router.delete(
+  "/contactList/:id",
+  checkAuthenticated,
+  function (req, res, next) {
+    contact.findByIdAndRemove(req.params.id, function (err, docs) {
+      if (err) {
+        console.log(err);
+        res.json({ success: false, error: JSON.stringify(err) });
+      } else {
+        console.log("Delete User : ", docs);
+        res.json({ success: true, error: "" });
+      }
+    });
+  }
+);
+
+// Login
+router.post("/login", (req, res, next) => {
+  const { username, password } = req.body;
+  let userObj = null;
+  userModel.findOne(
+    { username: username, password: password },
+    function (err, obj) {
+      userObj = obj;
+    }
+  );
+  passport.authenticate("local", (err, User, info) => {
+    //server err?
+    if (err) {
+      console.log(err);
+      return next(err);
+    }
+    //is there a user login error?
+    if (!userObj) {
+      req.flash("loginMessage", "Authentication Error");
+      return res.redirect("/login");
+    }
+    req.login(userObj, (err) => {
+      //server error?
+      if (err) {
+        return next(err);
+      }
+      console.log("Login success");
+      return res.redirect("/contactList");
+    });
+  })(req, res, next);
+});
+// Check is logined
+function checkAuthenticated(req, res, next) {
+  // console.log(req.isAuthenticated());
+  // if (req.isAuthenticated()) {
+  return next();
+  // }
+  // res.redirect("/login");
+}
+
 module.exports = router;

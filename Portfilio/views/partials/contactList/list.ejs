@@ -1,0 +1,68 @@
+<script>
+  function deleteCallback(id) {
+    const confirmed = confirm("Are you sure you want to delete this contact?");
+    if (confirmed) {
+      axios
+        .delete(`/contactList/` + id)
+        .then(() => {
+          location.reload();
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    }
+  }
+</script>
+<div class="row">
+  <div class="col-md-6">
+    <h2><%- title %></h2>
+  </div>
+</div>
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <% for (let contact of data.contacts) { %>
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <h5 class="card-title">
+              <%= contact.lastName %>, <%= contact.firstName %>
+            </h5>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <p class="card-text">Phone</p>
+          </div>
+          <div class="col-md-6">
+            <p class="card-text">Email</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-2">
+            <p class="card-text"><%= contact.phone %></p>
+          </div>
+          <div class="col-md-6">
+            <p class="card-text"><%= contact.email %></p>
+          </div>
+          <div class="col-md-1">
+            <a
+              href="/contactList/edit/<%= contact._id %>"
+              class="btn btn-primary"
+              >Update</a
+            >
+          </div>
+          <div class="col-md-1">
+            <a
+              onclick="deleteCallback('<%- contact._id %>')"
+              href="javascript:void(0);"
+              class="btn btn-primary btn-danger"
+              >Delete</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</div>
