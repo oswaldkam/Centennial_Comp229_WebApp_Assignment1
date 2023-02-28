@@ -105,6 +105,14 @@ router.delete(
 
 // Login
 router.post("/login", (req, res, next) => {
+  const { username, password } = req.body;
+  let userObj = null;
+  userModel.findOne(
+    { username: username, password: password },
+    function (err, obj) {
+      userObj = obj;
+    }
+  );
   passport.authenticate("local", (err, User, info) => {
     //server err?
     if (err) {
@@ -112,15 +120,16 @@ router.post("/login", (req, res, next) => {
       return next(err);
     }
     //is there a user login error?
-    if (!User) {
+    if (!userObj) {
       req.flash("loginMessage", "Authentication Error");
       return res.redirect("/login");
     }
-    req.login(User, (err) => {
+    req.login(userObj, (err) => {
       //server error?
       if (err) {
         return next(err);
       }
+      console.log("Login success");
       return res.redirect("/contactList");
     });
   })(req, res, next);
@@ -129,10 +138,9 @@ router.post("/login", (req, res, next) => {
 function checkAuthenticated(req, res, next) {
   // console.log(req.isAuthenticated());
   // if (req.isAuthenticated()) {
-  //   return next();
+  return next();
   // }
   // res.redirect("/login");
-  return next();
 }
 
 module.exports = router;
