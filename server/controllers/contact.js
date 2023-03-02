@@ -6,18 +6,20 @@ let Contact = require("../models/contacts");
 
 //we want to display the contactList
 module.exports.displayContactList = (req, res, next) => {
-  Contact.find((err, contactList) => {
-    if (err) {
-      return console.error(err);
-    } else {
-      //console.log(contactList);
-      res.render("contact/list", {
-        title: "Contacts",
-        contactList: contactList,
-        displayName: req.user ? req.user.displayName : "",
-      });
-    }
-  });
+  Contact.find()
+    .sort({ lastName: "asc" })
+    .exec((err, contactList) => {
+      if (err) {
+        return console.error(err);
+      } else {
+        //console.log(contactList);
+        res.render("contact/list", {
+          title: "Contacts",
+          contactList: contactList,
+          displayName: req.user ? req.user.displayName : "",
+        });
+      }
+    });
 };
 module.exports.displayAddPage = (req, res, next) => {
   res.render("contact/add", {
