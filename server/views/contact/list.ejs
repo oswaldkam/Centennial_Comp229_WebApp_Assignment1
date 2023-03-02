@@ -1,0 +1,62 @@
+<%-include ../partials/header.ejs%> <%-include ../partials/main_nav.ejs%>
+<!--Main Nav Navigation-->
+
+<main class="container">
+  <div class="row">
+    <div class="offset-md-1 col-md-9">
+      <h1><%=title %></h1>
+    </div>
+    <div class="offset-md-1 col-md-2 right">
+      <a href="/contact/add" class="btn btn-primary" role="button"
+        ><i class="fas fa-plus-circle"></i>Add a contact</a
+      >
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-10">
+      <% for (let contact of contactList) { %>
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <h5 class="card-title">
+                <%= contact.lastName %>, <%= contact.firstName %>
+              </h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <p class="card-text">Phone</p>
+            </div>
+            <div class="col-md-6">
+              <p class="card-text">Email</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <p class="card-text"><%= contact.phone %></p>
+            </div>
+            <div class="col-md-6">
+              <p class="card-text"><%= contact.email %></p>
+            </div>
+            <div class="col-md-1">
+              <a href="/contact/edit/<%= contact._id %>" class="btn btn-primary"
+                >Update</a
+              >
+            </div>
+            <div class="col-md-1">
+              <a
+                href="/contact/delete/<%- contact._id %>"
+                class="btn btn-primary btn-danger"
+                >Delete</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</main>
+
+<%-include ../partials/bottom_nav.ejs%> <%-include ../partials/footer.ejs%>
